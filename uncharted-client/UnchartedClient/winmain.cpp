@@ -1,55 +1,19 @@
-#include "DXApp.h"
+#include "stdafx.h"
+#include "SystemClass.h"
 
-
-class TestApp : public DXApp
+int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstace, _In_ LPTSTR lpCmdLine, _In_ int nCmdShow)
 {
-public:
-	TestApp(HINSTANCE hInstance);
-	~TestApp();
+	SystemClass *p_system = new SystemClass(hInstance);
+	
+	if (!p_system)
+		return -1;
 
-	bool Init() override;
-	void Update(float deltaTime) override;
-	void Render(float deltaTime) override;
-};
+	if (p_system->Init()) {
+		p_system->Run();
+	}
 
+	p_system->Shutdown();
+	Memory::SafeDelete(p_system);
 
-TestApp::TestApp(HINSTANCE hInstance) : DXApp(hInstance)
-{
-
-}
-
-
-TestApp::~TestApp()
-{
-
-}
-
-
-bool TestApp::Init()
-{
-	return DXApp::Init();
-}
-
-
-void TestApp::Update(float deltaTime)
-{
-
-}
-
-
-void TestApp::Render(float deltaTime)
-{
-	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, DirectX::Colors::CornflowerBlue);
-	m_pSwapChain->Present(0, 0);
-}
-
-
-int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstace, __in LPSTR lpCmdLine, __in int nShowCmd)
-{
-	TestApp tApp(hInstance);
-
-	if (!tApp.Init())
-		return 1;
-
-	return tApp.Run();
+	return 0;
 }

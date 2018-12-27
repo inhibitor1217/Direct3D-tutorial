@@ -1,8 +1,14 @@
 #pragma once
-#include <d3d11.h>
-#include <DirectXColors.h>
 
-#pragma comment(lib, "d3d11.lib")
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+
+#include "DxDefine.h"
 
 namespace Memory
 {
