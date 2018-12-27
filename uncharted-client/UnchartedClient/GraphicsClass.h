@@ -1,6 +1,9 @@
 #pragma once
 #include "stdafx.h"
 #include "D3DClass.h"
+#include "CameraClass.h"
+#include "RawModelClass.h"
+#include "TutorialShaderClass.h"
 
 const bool FULL_SCREEN   = false;
 const bool VSYNC_ENABLED = false;
@@ -19,7 +22,10 @@ public:
 	bool Frame();
 
 private:
-	D3DClass *m_pDirect3D;
+	D3DClass			*m_pDirect3D;
+	CameraClass			*m_pCamera;
+	RawModelClass		*m_pModel;
+	TutorialShaderClass *m_pShader;
 
 	bool Render();
 };
