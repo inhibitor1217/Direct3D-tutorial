@@ -144,18 +144,18 @@ bool SystemClass::InitWindows(int &screenWidth, int &screenHeight)
 	else {
 		screenWidth  = 800;
 		screenHeight = 600;
-
-		m_hwnd = CreateWindow("DXWNDCLASS", m_applicationName, WS_OVERLAPPEDWINDOW,
-			(GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2, (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2, screenWidth, screenHeight,
-			NULL, NULL, m_hInstance, NULL);
-
-		if (!m_hwnd)
-			return false;
-
-		ShowWindow(m_hwnd, SW_SHOW);
-		SetForegroundWindow(m_hwnd);
-		SetFocus(m_hwnd);
 	}
+
+	m_hwnd = CreateWindow("DXWNDCLASS", m_applicationName, WS_OVERLAPPEDWINDOW,
+		(GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2, (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2, screenWidth, screenHeight,
+		NULL, NULL, m_hInstance, NULL);
+
+	if (!m_hwnd)
+		return false;
+
+	ShowWindow(m_hwnd, SW_SHOW);
+	SetForegroundWindow(m_hwnd);
+	SetFocus(m_hwnd);
 
 	return true;
 }

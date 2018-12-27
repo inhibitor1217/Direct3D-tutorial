@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "D3DClass.h"
 
 const bool FULL_SCREEN   = false;
 const bool VSYNC_ENABLED = false;
@@ -18,6 +19,8 @@ public:
 	bool Frame();
 
 private:
+	D3DClass *m_pDirect3D;
+
 	bool Render();
 };
 
