@@ -25,7 +25,7 @@ private:
 	D3DClass			*m_pDirect3D;
 	CameraClass			*m_pCamera;
 	RawModelClass		*m_pModel;
-	TutorialShaderClass *m_pShader;
+	GeneralShaderClass  *m_pShader;
 
 	bool Render();
 };
