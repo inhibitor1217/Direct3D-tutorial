@@ -35,11 +35,16 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pCamera = new Camera();
 	if (!m_pCamera)
 		return false;
-	m_pCamera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_pCamera->SetPosition(0.0f, 0.0f, -10.0f);
 
-	m_pModel = new TextureModel("./Assets/Textures/grass-top.bmp");
+	// Create Mesh
+	tempMesh = new Mesh();
+	tempMesh->LoadOBJ("./Assets/Models/char.obj");
+
+	m_pModel = new TextureModel("./Assets/Textures/char.bmp");
 	if (!m_pModel)
 		return false;
+	m_pModel->SetMesh(tempMesh);
 	if (!m_pModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext())) {
 		MessageBox(hwnd, "Could not initialize the model object", "Error", MB_OK);
 		return false;

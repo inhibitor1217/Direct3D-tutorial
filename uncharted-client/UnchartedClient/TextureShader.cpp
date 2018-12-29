@@ -36,7 +36,7 @@ bool TextureShader::InitShader(ID3D11Device *pDevice, HWND hwnd)
 
 unsigned int TextureShader::SetPolygonLayout()
 {
-	m_pPolygonLayout = new D3D11_INPUT_ELEMENT_DESC[2];
+	m_pPolygonLayout = new D3D11_INPUT_ELEMENT_DESC[3];
 
 	m_pPolygonLayout[0].SemanticName = "POSITION";
 	m_pPolygonLayout[0].SemanticIndex = 0;
@@ -54,7 +54,15 @@ unsigned int TextureShader::SetPolygonLayout()
 	m_pPolygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	m_pPolygonLayout[1].InstanceDataStepRate = 0;
 
-	return 2;
+	m_pPolygonLayout[2].SemanticName = "NORMAL";
+	m_pPolygonLayout[2].SemanticIndex = 0;
+	m_pPolygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	m_pPolygonLayout[2].InputSlot = 0;
+	m_pPolygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	m_pPolygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	m_pPolygonLayout[2].InstanceDataStepRate = 0;
+
+	return 3;
 }
 
 

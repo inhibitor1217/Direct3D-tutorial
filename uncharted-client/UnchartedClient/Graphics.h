@@ -27,6 +27,9 @@ private:
 	RawModel		*m_pModel;
 	GeneralShader	*m_pShader;
 
+	// temp
+	Mesh *tempMesh = nullptr;
+
 	bool Render();
 };
 
