@@ -1,8 +1,8 @@
-#include "SystemClass.h"
+#include "System.h"
 
 
 
-SystemClass::SystemClass(HINSTANCE hInstance)
+System::System(HINSTANCE hInstance)
 {
 	g_pApplicationHandle = this;
 
@@ -14,17 +14,17 @@ SystemClass::SystemClass(HINSTANCE hInstance)
 }
 
 
-SystemClass::SystemClass(const SystemClass &other)
+System::System(const System &other)
 {
 }
 
 
-SystemClass::~SystemClass()
+System::~System()
 {
 }
 
 
-bool SystemClass::Init()
+bool System::Init()
 {
 	INT screenWidth = 0;
 	INT screenHeight = 0;
@@ -32,19 +32,19 @@ bool SystemClass::Init()
 	if (!InitWindows(screenWidth, screenHeight))
 		return false;
 
-	m_pInput = new InputClass();
+	m_pInput = new Input();
 	if (!m_pInput)
 		return false;
 	m_pInput->Init();
 
-	m_pGraphics = new GraphicsClass();
+	m_pGraphics = new Graphics();
 	if (!m_pGraphics)
 		return false;
 	return m_pGraphics->Init(screenWidth, screenHeight, m_hwnd);
 }
 
 
-void SystemClass::Shutdown()
+void System::Shutdown()
 {
 	if (m_pGraphics) {
 		m_pGraphics->Shutdown();
@@ -59,7 +59,7 @@ void SystemClass::Shutdown()
 }
 
 
-int SystemClass::Run()
+int System::Run()
 {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
@@ -79,7 +79,7 @@ int SystemClass::Run()
 }
 
 
-bool SystemClass::Frame()
+bool System::Frame()
 {
 	if (m_pInput->IsKeyDown(VK_ESCAPE))
 		return false;
@@ -88,7 +88,7 @@ bool SystemClass::Frame()
 }
 
 
-LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
@@ -106,7 +106,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam,
 }
 
 
-bool SystemClass::InitWindows(int &screenWidth, int &screenHeight)
+bool System::InitWindows(int &screenWidth, int &screenHeight)
 {
 	WNDCLASSEX wcex;
 	ZeroMemory(&wcex, sizeof(WNDCLASSEX));
@@ -161,7 +161,7 @@ bool SystemClass::InitWindows(int &screenWidth, int &screenHeight)
 }
 
 
-void SystemClass::ShutdownWindows()
+void System::ShutdownWindows()
 {
 	if (FULL_SCREEN)
 		ChangeDisplaySettings(NULL, 0);

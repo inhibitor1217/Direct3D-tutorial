@@ -1,14 +1,14 @@
 #pragma once
 #include "stdafx.h"
-#include "InputClass.h"
-#include "GraphicsClass.h"
+#include "Input.h"
+#include "Graphics.h"
 
-class SystemClass
+class System
 {
 public:
-	SystemClass(HINSTANCE hInstance);
-	SystemClass(const SystemClass &other);
-	~SystemClass();
+	System(HINSTANCE hInstance);
+	System(const System &other);
+	~System();
 
 	bool Init();
 	void Shutdown();
@@ -20,8 +20,8 @@ private:
 	LPCSTR			m_applicationName;
 	HINSTANCE		m_hInstance;
 	HWND			m_hwnd;
-	InputClass		*m_pInput = nullptr;
-	GraphicsClass	*m_pGraphics = nullptr;
+	Input			*m_pInput = nullptr;
+	Graphics		*m_pGraphics = nullptr;
 
 	bool Frame();
 	bool InitWindows(int &screenWidth, int &screenHeight);
@@ -29,5 +29,5 @@ private:
 };
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-static SystemClass *g_pApplicationHandle = 0;
+static System *g_pApplicationHandle = 0;
 

@@ -1,8 +1,8 @@
-#include "GraphicsClass.h"
+#include "Graphics.h"
 
 
 
-GraphicsClass::GraphicsClass()
+Graphics::Graphics()
 {
 	m_pDirect3D = nullptr;
 	m_pCamera	= nullptr;
@@ -11,19 +11,19 @@ GraphicsClass::GraphicsClass()
 }
 
 
-GraphicsClass::GraphicsClass(const GraphicsClass &other)
+Graphics::Graphics(const Graphics &other)
 {
 }
 
 
-GraphicsClass::~GraphicsClass()
+Graphics::~Graphics()
 {
 }
 
 
-bool GraphicsClass::Init(INT screenWidth, INT screenHeight, HWND hwnd)
+bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 {
-	m_pDirect3D = (D3DClass *)malloc(sizeof(D3DClass));
+	m_pDirect3D = (D3D *)malloc(sizeof(D3D));
 	if (!m_pDirect3D)
 		return false;
 
@@ -32,20 +32,20 @@ bool GraphicsClass::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 		return false;
 	}
 
-	m_pCamera = new CameraClass();
+	m_pCamera = new Camera();
 	if (!m_pCamera)
 		return false;
 	m_pCamera->SetPosition(0.0f, 0.0f, -5.0f);
 
-	m_pModel = new RawModelClass();
+	m_pModel = new TextureModel("./Assets/Textures/grass-top.bmp");
 	if (!m_pModel)
 		return false;
-	if (!m_pModel->Init(m_pDirect3D->GetDevice())) {
+	if (!m_pModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext())) {
 		MessageBox(hwnd, "Could not initialize the model object", "Error", MB_OK);
 		return false;
 	}
 
-	m_pShader = new TutorialShaderClass();
+	m_pShader = new TextureShader();
 	if (!m_pShader)
 		return false;
 	if (!m_pShader->Init(m_pDirect3D->GetDevice(), hwnd)) {
@@ -57,7 +57,7 @@ bool GraphicsClass::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 }
 
 
-void GraphicsClass::Shutdown()
+void Graphics::Shutdown()
 {
 	if (m_pShader)
 		m_pShader->Shutdown();
@@ -75,13 +75,13 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame()
+bool Graphics::Frame()
 {
 	return Render();
 }
 
 
-bool GraphicsClass::Render()
+bool Graphics::Render()
 {
 	m_pDirect3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -94,7 +94,7 @@ bool GraphicsClass::Render()
 
 	m_pModel->Render(m_pDirect3D->GetDeviceContext());
 
-	if (!m_pShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), world, view, projection))
+	if (!m_pShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), world, view, projection, m_pModel->GetTexture()))
 		return false;
 
 	m_pDirect3D->EndScene();

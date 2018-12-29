@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "SystemClass.h"
+#include "System.h"
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstace, _In_ LPTSTR lpCmdLine, _In_ int nCmdShow)
 {
-	SystemClass *p_system = new SystemClass(hInstance);
+	System *p_system = new System(hInstance);
 	
 	if (!p_system)
 		return -1;

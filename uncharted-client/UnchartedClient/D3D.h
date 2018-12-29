@@ -1,12 +1,12 @@
 #pragma once
 #include "stdafx.h"
 
-class D3DClass
+class D3D
 {
 public:
-	D3DClass();
-	D3DClass(const D3DClass &other);
-	~D3DClass();
+	D3D();
+	D3D(const D3D &other);
+	~D3D();
 
 	bool Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
 	void Shutdown();

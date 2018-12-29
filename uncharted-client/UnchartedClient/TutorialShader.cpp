@@ -1,7 +1,7 @@
-#include "TutorialShaderClass.h"
+#include "TutorialShader.h"
 
 
-TutorialShaderClass::TutorialShaderClass()
+TutorialShader::TutorialShader()
 {
 	m_vsFilename = "tutorial.vert";
 	m_psFilename = "tutorial.pixel";
@@ -10,7 +10,8 @@ TutorialShaderClass::TutorialShaderClass()
 }
 
 
-bool TutorialShaderClass::Render(ID3D11DeviceContext *pDeviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool TutorialShader::Render(ID3D11DeviceContext *pDeviceContext, int indexCount,
+	XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView *texture)
 {
 	if (!SetShaderParams(pDeviceContext, worldMatrix, viewMatrix, projectionMatrix))
 		return false;
@@ -21,7 +22,7 @@ bool TutorialShaderClass::Render(ID3D11DeviceContext *pDeviceContext, int indexC
 }
 
 
-unsigned int TutorialShaderClass::SetPolygonLayout()
+unsigned int TutorialShader::SetPolygonLayout()
 {
 	m_pPolygonLayout = new D3D11_INPUT_ELEMENT_DESC[2];
 
@@ -45,7 +46,7 @@ unsigned int TutorialShaderClass::SetPolygonLayout()
 }
 
 
-bool TutorialShaderClass::SetShaderParams(ID3D11DeviceContext *pDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection)
+bool TutorialShader::SetShaderParams(ID3D11DeviceContext *pDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection)
 {
 	world = XMMatrixTranspose(world);
 	view = XMMatrixTranspose(view);

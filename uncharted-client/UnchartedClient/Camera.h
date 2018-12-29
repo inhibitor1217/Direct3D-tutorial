@@ -1,12 +1,12 @@
 #pragma once
 #include "stdafx.h"
 
-class CameraClass: public AlignedAllocationPolicy<16>
+class Camera: public AlignedAllocationPolicy<16>
 {
 public:
-	CameraClass();
-	CameraClass(const CameraClass &other);
-	~CameraClass();
+	Camera();
+	Camera(const Camera &other);
+	~Camera();
 
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);

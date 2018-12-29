@@ -1,8 +1,8 @@
-#include "D3DClass.h"
+#include "D3D.h"
 
 
 
-D3DClass::D3DClass()
+D3D::D3D()
 {
 	m_pSwapChain			= nullptr;
 	m_pDevice				= nullptr;
@@ -15,17 +15,17 @@ D3DClass::D3DClass()
 }
 
 
-D3DClass::D3DClass(const D3DClass &other)
+D3D::D3D(const D3D &other)
 {
 }
 
 
-D3DClass::~D3DClass()
+D3D::~D3D()
 {
 }
 
 
-bool D3DClass::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool D3D::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	m_vsync_enabled = vsync;
 
@@ -206,7 +206,7 @@ bool D3DClass::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bo
 }
 
 
-void D3DClass::Shutdown()
+void D3D::Shutdown()
 {
 	if (m_pSwapChain)
 		m_pSwapChain->SetFullscreenState(false, NULL);
@@ -222,7 +222,7 @@ void D3DClass::Shutdown()
 }
 
 
-void D3DClass::BeginScene(float r, float g, float b, float a)
+void D3D::BeginScene(float r, float g, float b, float a)
 {
 	float color[] = { r, g, b, a };
 
@@ -231,7 +231,7 @@ void D3DClass::BeginScene(float r, float g, float b, float a)
 }
 
 
-void D3DClass::EndScene()
+void D3D::EndScene()
 {
 	if (m_vsync_enabled)
 		m_pSwapChain->Present(1, 0);
@@ -240,37 +240,37 @@ void D3DClass::EndScene()
 }
 
 
-ID3D11Device *D3DClass::GetDevice()
+ID3D11Device *D3D::GetDevice()
 {
 	return m_pDevice;
 }
 
 
-ID3D11DeviceContext *D3DClass::GetDeviceContext()
+ID3D11DeviceContext *D3D::GetDeviceContext()
 {
 	return m_pDeviceContext;
 }
 
 
-void D3DClass::GetProjectionMatrix(XMMATRIX &projectionMatrix)
+void D3D::GetProjectionMatrix(XMMATRIX &projectionMatrix)
 {
 	projectionMatrix = m_projectionMatrix;
 }
 
 
-void D3DClass::GetWorldMatrix(XMMATRIX &worldMatrix)
+void D3D::GetWorldMatrix(XMMATRIX &worldMatrix)
 {
 	worldMatrix = m_worldMatrix;
 }
 
 
-void D3DClass::GetOrthoMatrix(XMMATRIX &orthoMatrix)
+void D3D::GetOrthoMatrix(XMMATRIX &orthoMatrix)
 {
 	orthoMatrix = m_orthoMatrix;
 }
 
 
-void D3DClass::GetVideoCardInfo(char *cardName, int &memory)
+void D3D::GetVideoCardInfo(char *cardName, int &memory)
 {
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;

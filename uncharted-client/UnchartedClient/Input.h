@@ -1,12 +1,12 @@
 #pragma once
 #include "stdafx.h"
 
-class InputClass
+class Input
 {
 public:
-	InputClass();
-	InputClass(const InputClass &other);
-	~InputClass();
+	Input();
+	Input(const Input &other);
+	~Input();
 
 	void Init();
 

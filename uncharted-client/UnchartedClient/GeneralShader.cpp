@@ -1,8 +1,8 @@
-#include "GeneralShaderClass.h"
+#include "GeneralShader.h"
 
 
 
-GeneralShaderClass::GeneralShaderClass()
+GeneralShader::GeneralShader()
 {
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;
@@ -17,29 +17,29 @@ GeneralShaderClass::GeneralShaderClass()
 }
 
 
-GeneralShaderClass::GeneralShaderClass(const GeneralShaderClass &other)
+GeneralShader::GeneralShader(const GeneralShader &other)
 {
 }
 
 
-GeneralShaderClass::~GeneralShaderClass()
+GeneralShader::~GeneralShader()
 {
 }
 
 
-bool GeneralShaderClass::Init(ID3D11Device *pDevice, HWND hwnd)
+bool GeneralShader::Init(ID3D11Device *pDevice, HWND hwnd)
 {
 	return InitShader(pDevice, hwnd);
 }
 
 
-void GeneralShaderClass::Shutdown()
+void GeneralShader::Shutdown()
 {
 	ShutdownShader();
 }
 
 
-bool GeneralShaderClass::InitShader(ID3D11Device *pDevice, HWND hwnd)
+bool GeneralShader::InitShader(ID3D11Device *pDevice, HWND hwnd)
 {
 	ID3D10Blob *errorMsg = nullptr;
 
@@ -94,7 +94,7 @@ bool GeneralShaderClass::InitShader(ID3D11Device *pDevice, HWND hwnd)
 	return true;
 }
 
-void GeneralShaderClass::ShutdownShader()
+void GeneralShader::ShutdownShader()
 {
 	Memory::SafeRelease(m_pMatrixBuffer);
 	Memory::SafeRelease(m_pLayout);
@@ -103,7 +103,7 @@ void GeneralShaderClass::ShutdownShader()
 }
 
 
-void GeneralShaderClass::OutputShaderErrorMsg(ID3D10Blob *errorMsg, HWND hwnd, LPCSTR shaderFilename)
+void GeneralShader::OutputShaderErrorMsg(ID3D10Blob *errorMsg, HWND hwnd, LPCSTR shaderFilename)
 {
 	OutputDebugString(reinterpret_cast<const char *>(errorMsg->GetBufferPointer()));
 
@@ -113,7 +113,7 @@ void GeneralShaderClass::OutputShaderErrorMsg(ID3D10Blob *errorMsg, HWND hwnd, L
 }
 
 
-void GeneralShaderClass::RenderShader(ID3D11DeviceContext *pDeviceContext, int indexCount)
+void GeneralShader::RenderShader(ID3D11DeviceContext *pDeviceContext, int indexCount)
 {
 	pDeviceContext->IASetInputLayout(m_pLayout);
 

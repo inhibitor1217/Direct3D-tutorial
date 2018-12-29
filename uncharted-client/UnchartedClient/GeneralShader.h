@@ -1,16 +1,17 @@
 #pragma once
 #include "stdafx.h"
 
-class GeneralShaderClass: public AlignedAllocationPolicy<16>
+class GeneralShader: public AlignedAllocationPolicy<16>
 {
 public:
-	GeneralShaderClass();
-	GeneralShaderClass(const GeneralShaderClass &other);
-	~GeneralShaderClass();
+	GeneralShader();
+	GeneralShader(const GeneralShader &other);
+	~GeneralShader();
 
 	virtual bool Init(ID3D11Device *pDevice, HWND hwnd);
 	virtual void Shutdown();
-	virtual bool Render(ID3D11DeviceContext *pDeviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix) = 0;
+	virtual bool Render(ID3D11DeviceContext *pDeviceContext, int indexCount,
+		XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView *texture) = 0;
 
 protected:
 	struct MatrixBufferType {

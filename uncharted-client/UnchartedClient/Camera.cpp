@@ -1,25 +1,25 @@
-#include "CameraClass.h"
+#include "Camera.h"
 
 
 
-CameraClass::CameraClass()
+Camera::Camera()
 {
 	m_position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 
-CameraClass::CameraClass(const CameraClass &other)
+Camera::Camera(const Camera &other)
 {
 }
 
 
-CameraClass::~CameraClass()
+Camera::~Camera()
 {
 }
 
 
-void CameraClass::SetPosition(float x, float y, float z)
+void Camera::SetPosition(float x, float y, float z)
 {
 	m_position.x = x;
 	m_position.y = y;
@@ -27,7 +27,7 @@ void CameraClass::SetPosition(float x, float y, float z)
 }
 
 
-void CameraClass::SetRotation(float x, float y, float z)
+void Camera::SetRotation(float x, float y, float z)
 {
 	m_rotation.x = x;
 	m_rotation.y = y;
@@ -35,25 +35,25 @@ void CameraClass::SetRotation(float x, float y, float z)
 }
 
 
-XMFLOAT3 CameraClass::GetPosition()
+XMFLOAT3 Camera::GetPosition()
 {
 	return m_position;
 }
 
 
-XMFLOAT3 CameraClass::GetRotation()
+XMFLOAT3 Camera::GetRotation()
 {
 	return m_rotation;
 }
 
 
-void CameraClass::GetViewMatrix(XMMATRIX &viewMatrix)
+void Camera::GetViewMatrix(XMMATRIX &viewMatrix)
 {
 	viewMatrix = m_viewMatrix;
 }
 
 
-void CameraClass::Render()
+void Camera::Render()
 {
 	XMFLOAT3 up, position, forward;
 	XMVECTOR upVector, positionVector, forwardVector;
