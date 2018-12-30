@@ -3,7 +3,8 @@
 #include "D3D.h"
 #include "Camera.h"
 #include "TextureModel.h"
-#include "TextureShader.h"
+#include "UIModel.h"
+#include "UIShader.h"
 
 const bool FULL_SCREEN   = false;
 const bool VSYNC_ENABLED = false;
@@ -25,7 +26,9 @@ private:
 	D3D				*m_pDirect3D;
 	Camera			*m_pCamera;
 	RawModel		*m_pModel;
-	GeneralShader	*m_pShader;
+	UIModel			*m_pUIModel;
+	GeneralShader	*m_pTextureShader;
+	GeneralShader	*m_pUIShader;
 
 	// temp
 	Mesh *tempMesh = nullptr;

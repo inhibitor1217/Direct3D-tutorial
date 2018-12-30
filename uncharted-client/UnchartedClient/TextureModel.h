@@ -9,6 +9,7 @@ public:
 
 	bool Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext) override;
 	void Shutdown() override;
+
 	ID3D11ShaderResourceView *GetTexture() override;
 
 private:
