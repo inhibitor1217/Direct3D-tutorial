@@ -5,19 +5,12 @@
 class TextureModel: public RawModel
 {
 public:
-	TextureModel(char *filename);
+	TextureModel();
 
-	bool Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext) override;
-	void Shutdown() override;
-
-	ID3D11ShaderResourceView *GetTexture() override;
+	ID3D11ShaderResourceView *GetTexture();
+	void SetTexture(Texture *texture);
 
 private:
-
 	Texture	*m_pTexture;
-	char	m_textureFilename[256];
-
-	bool LoadTexture(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
-	void ReleaseTexture();
 };
 

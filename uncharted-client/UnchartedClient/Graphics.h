@@ -6,6 +6,7 @@
 #include "TextureModel.h"
 #include "UIModel.h"
 #include "UIShader.h"
+#include <vector>
 
 const bool FULL_SCREEN   = false;
 const bool VSYNC_ENABLED = false;
@@ -31,8 +32,9 @@ private:
 	GeneralShader	*m_pTextureShader;
 	GeneralShader	*m_pUIShader;
 
-	// temp
-	Mesh *tempMesh = nullptr;
+	std::vector<Mesh *> m_meshes;
+	std::vector<Font *> m_fonts;
+	std::vector<Texture *> m_textures;
 
 	bool Render();
 };

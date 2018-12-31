@@ -4,11 +4,11 @@
 class Texture
 {
 public:
-	Texture();
+	Texture(char *filename);
 	Texture(const Texture &other);
 	~Texture();
 
-	bool Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, char *filename);
+	bool Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
 	void Shutdown();
 
 	ID3D11ShaderResourceView *GetTexture();
@@ -42,7 +42,9 @@ protected:
 	ID3D11Texture2D				*m_pTexture;
 	ID3D11ShaderResourceView	*m_pTextureView;
 
-	bool LoadTarga(char *filename, int &width, int &height);
-	bool LoadBMPARGB32(char *filename, int &width, int &height);
+	char m_Filename[256];
+
+	bool LoadTarga(int &width, int &height);
+	bool LoadBMPARGB32(int &width, int &height);
 };
 

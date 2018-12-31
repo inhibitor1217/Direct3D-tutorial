@@ -40,27 +40,52 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pCamera->SetPosition(0.0f, 3.0f, -10.0f);
 
 	// Load Fonts.
-	Font *m_font = new Font();
-	m_font->Init("./Assets/Fonts/arial.fnt", screenWidth, screenHeight);
+	char *fontFiles[] = {
+		"./Assets/Fonts/arial.fnt"
+	};
+	for (auto filename : fontFiles) {
+		Font *font = new Font();
+		font->Init(filename, screenWidth, screenHeight);
+		m_fonts.push_back(font);
+	}
+
+	// Load Textures.
+	char *textureFiles[] = {
+		"./Assets/Textures/char.bmp",
+		"./Assets/Textures/grass-top.bmp"
+	};
+	for (auto filename : textureFiles) {
+		Texture *texture = new Texture(filename);
+		texture->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext());
+		m_textures.push_back(texture);
+	}
 
 	// Load Meshes.
-	tempMesh = new Mesh();
-	tempMesh->LoadOBJ("./Assets/Models/char.obj");
+	char *meshFiles[] = {
+		"./Assets/Models/char.obj"
+	};
+	for (auto filename : meshFiles) {
+		Mesh *mesh = new Mesh();
+		mesh->LoadOBJ(filename);
+		m_meshes.push_back(mesh);
+	}
 
 	// Load 3D Models.
-	m_pModel = new TextureModel("./Assets/Textures/char.bmp");
+	m_pModel = new TextureModel();
 	if (!m_pModel)
 		return false;
-	m_pModel->SetMesh(tempMesh);
+	m_pModel->SetMesh(m_meshes[0]);
+	reinterpret_cast<TextureModel *>(m_pModel)->SetTexture(m_textures[0]);
 	if (!m_pModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext())) {
 		MessageBox(hwnd, "Could not initialize the model object", "Error", MB_OK);
 		return false;
 	}
 
 	// Load UI Models.
-	m_pUIModel = new UIModel("./Assets/Textures/grass-top.bmp");
+	m_pUIModel = new UIModel();
 	if (!m_pUIModel)
 		return false;
+	m_pUIModel->SetTexture(m_textures[1]);
 	if (!m_pUIModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(),
 		screenWidth, screenHeight, 128, 128)) {
 		MessageBox(hwnd, "Could not initialize the UI object", "Error", MB_OK);
@@ -111,6 +136,20 @@ void Graphics::Shutdown()
 	Memory::SafeDelete(m_pUIModel);
 	Memory::SafeDelete(m_pCamera);
 	Memory::SafeDelete(m_pDirect3D);
+
+	for (auto mesh : m_meshes) {
+		Memory::SafeDelete(mesh);
+	}
+	
+	for (auto texture : m_textures) {
+		texture->Shutdown();
+		Memory::SafeDelete(texture);
+	}
+
+	for (auto font : m_fonts) {
+		font->Shutdown();
+		Memory::SafeDelete(font);
+	}
 }
 
 
@@ -136,7 +175,8 @@ bool Graphics::Render()
 	
 	// Render Scene.
 	m_pModel->Render(m_pDirect3D->GetDeviceContext());
-	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), world, view, projection, m_pModel->GetTexture()))
+	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), world, view, projection, 
+		reinterpret_cast<TextureModel *>(m_pModel)->GetTexture()))
 		return false;
 
 	m_pDirect3D->UseZBuffer(false);

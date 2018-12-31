@@ -2,11 +2,13 @@
 
 
 
-Texture::Texture()
+Texture::Texture(char *filename)
 {
 	m_pTextureData	= nullptr;
 	m_pTexture		= nullptr;
 	m_pTextureView	= nullptr;
+
+	strncpy_s(m_Filename, filename, sizeof(m_Filename));
 }
 
 
@@ -21,17 +23,17 @@ Texture::~Texture()
 
 
 
-bool Texture::Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, char *filename)
+bool Texture::Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext)
 {
 	int width = 0;
 	int height = 0;
 
-	if (strstr(filename, ".bmp") != NULL) {
-		if (!LoadBMPARGB32(filename, width, height))
+	if (strstr(m_Filename, ".bmp") != NULL) {
+		if (!LoadBMPARGB32(width, height))
 			return false;
 	}
-	else if (strstr(filename, ".tga") != NULL) {
-		if (!LoadTarga(filename, width, height))
+	else if (strstr(m_Filename, ".tga") != NULL) {
+		if (!LoadTarga(width, height))
 			return false;
 	}
 	else
@@ -88,10 +90,10 @@ ID3D11ShaderResourceView *Texture::GetTexture()
 }
 
 
-bool Texture::LoadBMPARGB32(char *filename, int &width, int &height)
+bool Texture::LoadBMPARGB32(int &width, int &height)
 {
 	FILE *file;
-	if (fopen_s(&file, filename, "rb") != 0)
+	if (fopen_s(&file, m_Filename, "rb") != 0)
 		return false;
 
 	BMPHeader bmpFileHeader;
@@ -138,10 +140,10 @@ bool Texture::LoadBMPARGB32(char *filename, int &width, int &height)
 }
 
 
-bool Texture::LoadTarga(char *filename, int &width, int &height)
+bool Texture::LoadTarga(int &width, int &height)
 {
 	FILE *file;
-	if (fopen_s(&file, filename, "rb") != 0)
+	if (fopen_s(&file, m_Filename, "rb") != 0)
 		return false;
 
 	TargaHeader targaFileHeader;

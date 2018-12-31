@@ -2,11 +2,9 @@
 
 
 
-UIModel::UIModel(char *filename)
+UIModel::UIModel()
 {
 	m_pTexture = nullptr;
-
-	strncpy_s(m_textureFilename, filename, sizeof(m_textureFilename));
 }
 
 
@@ -29,17 +27,12 @@ bool UIModel::Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, i
 	m_prevPosX = -1;
 	m_prevPosY = -1;
 
-	if (!InitBuffers(pDevice))
-		return false;
-
-	return LoadTexture(pDevice, pDeviceContext);
+	return InitBuffers(pDevice);
 }
 
 
 void UIModel::Shutdown()
 {
-	ReleaseTexture();
-
 	ShutdownBuffers();
 }
 
@@ -63,6 +56,12 @@ int UIModel::GetIndexCount()
 ID3D11ShaderResourceView *UIModel::GetTexture()
 {
 	return m_pTexture->GetTexture();
+}
+
+
+void UIModel::SetTexture(Texture *texture)
+{
+	m_pTexture = texture;
 }
 
 
@@ -187,23 +186,4 @@ void UIModel::RenderBuffers(ID3D11DeviceContext *pDeviceContext)
 	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-
-bool UIModel::LoadTexture(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext)
-{
-	m_pTexture = new Texture();
-	if (!m_pTexture)
-		return false;
-
-	return m_pTexture->Init(pDevice, pDeviceContext, m_textureFilename);
-}
-
-
-void UIModel::ReleaseTexture()
-{
-	if (m_pTexture)
-		m_pTexture->Shutdown();
-
-	Memory::SafeDelete(m_pTexture);
 }

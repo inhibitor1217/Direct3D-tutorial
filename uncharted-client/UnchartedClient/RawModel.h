@@ -12,7 +12,6 @@ public:
 	virtual bool Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
 	virtual void Shutdown();
 	virtual void Render(ID3D11DeviceContext *pDeviceContext);
-	virtual ID3D11ShaderResourceView *GetTexture() = 0;
 
 	int GetIndexCount();
 	void SetMesh(Mesh *mesh);

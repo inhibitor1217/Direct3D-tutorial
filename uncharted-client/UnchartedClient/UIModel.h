@@ -5,7 +5,7 @@
 class UIModel
 {
 public:
-	UIModel(char *filename);
+	UIModel();
 	UIModel(const UIModel &other);
 	~UIModel();
 
@@ -16,6 +16,7 @@ public:
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView *GetTexture();
+	void SetTexture(Texture *texture);
 
 protected:
 	struct VertexType {
@@ -24,7 +25,6 @@ protected:
 	};
 
 	Texture *m_pTexture;
-	char	m_textureFilename[256];
 
 	ID3D11Buffer *m_pVertexBuffer = nullptr;
 	ID3D11Buffer *m_pIndexBuffer = nullptr;
@@ -42,8 +42,5 @@ protected:
 	virtual void ShutdownBuffers();
 	virtual bool UpdateBuffers(ID3D11DeviceContext *pDeviceContext, int posX, int posY);
 	virtual void RenderBuffers(ID3D11DeviceContext *pDeviceContext);
-
-	bool LoadTexture(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
-	void ReleaseTexture();
 };
 
