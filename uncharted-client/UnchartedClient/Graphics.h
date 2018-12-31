@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "D3D.h"
 #include "Camera.h"
+#include "Font.h"
 #include "TextureModel.h"
 #include "UIModel.h"
 #include "UIShader.h"

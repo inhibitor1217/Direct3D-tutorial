@@ -21,6 +21,7 @@ public:
 	void GetOrthoMatrix(XMMATRIX &orthoMatrix);
 	void GetVideoCardInfo(char *cardName, int &memory);
 	void UseZBuffer(bool use);
+	void UseAlphaBlending(bool use);
 
 private:
 	bool	m_vsync_enabled = false;
@@ -36,6 +37,8 @@ private:
 	ID3D11DepthStencilState *m_pDepthDisabledStencilState;
 	ID3D11DepthStencilView	*m_pDepthStencilView;
 	ID3D11RasterizerState	*m_pRasterState;
+	ID3D11BlendState		*m_pAlphaEnabledBlendingState;
+	ID3D11BlendState		*m_pAlphaDisabledBlendingState;
 	
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;

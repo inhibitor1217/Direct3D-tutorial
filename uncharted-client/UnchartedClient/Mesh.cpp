@@ -89,6 +89,9 @@ bool Mesh::LoadOBJ(char *filename)
 		}
 	}
 
+	if (fclose(file) != 0)
+		return false;
+
 	m_vertexCount = 3 * vertexIndices.size();
 	m_indexCount = vertexIndices.size();
 

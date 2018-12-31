@@ -37,13 +37,17 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pCamera = new Camera();
 	if (!m_pCamera)
 		return false;
-	m_pCamera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_pCamera->SetPosition(0.0f, 3.0f, -10.0f);
 
-	// Load meshes.
+	// Load Fonts.
+	Font *m_font = new Font();
+	m_font->Init("./Assets/Fonts/arial.fnt", screenWidth, screenHeight);
+
+	// Load Meshes.
 	tempMesh = new Mesh();
 	tempMesh->LoadOBJ("./Assets/Models/char.obj");
 
-	// Initialize 3D Models.
+	// Load 3D Models.
 	m_pModel = new TextureModel("./Assets/Textures/char.bmp");
 	if (!m_pModel)
 		return false;
@@ -53,7 +57,7 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize UI Models.
+	// Load UI Models.
 	m_pUIModel = new UIModel("./Assets/Textures/grass-top.bmp");
 	if (!m_pUIModel)
 		return false;
@@ -63,7 +67,7 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Compile and initialize shaders.
+	// Load Shaders.
 	m_pTextureShader = new TextureShader();
 	if (!m_pTextureShader)
 		return false;

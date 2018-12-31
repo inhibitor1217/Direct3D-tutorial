@@ -13,6 +13,8 @@ D3D::D3D()
 	m_pDepthDisabledStencilState	= nullptr;
 	m_pDepthStencilView				= nullptr;
 	m_pRasterState					= nullptr;
+	m_pAlphaEnabledBlendingState	= nullptr;
+	m_pAlphaDisabledBlendingState	= nullptr;
 }
 
 
@@ -216,6 +218,25 @@ bool D3D::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fu
 
 	m_pDeviceContext->RSSetViewports(1, &viewPort);
 
+	D3D11_BLEND_DESC blendStateDesc;
+	ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+	blendStateDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0F;
+
+	if (FAILED(m_pDevice->CreateBlendState(&blendStateDesc, &m_pAlphaEnabledBlendingState)))
+		return false;
+
+	blendStateDesc.RenderTarget[0].BlendEnable = FALSE;
+
+	if (FAILED(m_pDevice->CreateBlendState(&blendStateDesc, &m_pAlphaDisabledBlendingState)))
+		return false;
+
 	float FOV = 3.141592654f / 4.0f;
 	float screenAspectRatio = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
 
@@ -241,6 +262,8 @@ void D3D::Shutdown()
 	Memory::SafeRelease(m_pDeviceContext);
 	Memory::SafeRelease(m_pDevice);
 	Memory::SafeRelease(m_pSwapChain);
+	Memory::SafeRelease(m_pAlphaEnabledBlendingState);
+	Memory::SafeRelease(m_pAlphaDisabledBlendingState);
 }
 
 
@@ -305,4 +328,15 @@ void D3D::UseZBuffer(bool use)
 		m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 	else
 		m_pDeviceContext->OMSetDepthStencilState(m_pDepthDisabledStencilState, 1);
+}
+
+
+void D3D::UseAlphaBlending(bool use)
+{
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	
+	if (use)
+		m_pDeviceContext->OMSetBlendState(m_pAlphaEnabledBlendingState, blendFactor, 0xFFFFFFFF);
+	else
+		m_pDeviceContext->OMSetBlendState(m_pAlphaDisabledBlendingState, blendFactor, 0xFFFFFFFF);
 }
