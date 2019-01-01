@@ -6,6 +6,7 @@ class RawModel: public AlignedAllocationPolicy<16>
 {
 public:
 	RawModel();
+	RawModel(Mesh *mesh);
 	RawModel(const RawModel &other);
 	~RawModel();
 
@@ -14,7 +15,7 @@ public:
 	virtual void Render(ID3D11DeviceContext *pDeviceContext);
 
 	int GetIndexCount();
-	void SetMesh(Mesh *mesh);
+	Mesh *GetMesh();
 	
 protected:
 

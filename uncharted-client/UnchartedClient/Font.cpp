@@ -52,6 +52,12 @@ float Font::GetSpaceWidth()
 }
 
 
+float Font::GetLineHeight()
+{
+	return LINE_HEIGHT;
+}
+
+
 Character *Font::GetCharacter(int key)
 {
 	if (key < 0 || key >= MAX_ASCII)

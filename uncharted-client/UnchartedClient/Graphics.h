@@ -31,6 +31,7 @@ private:
 	UIText			*m_pUIText;
 	GeneralShader	*m_pTextureShader;
 	GeneralShader	*m_pUIShader;
+	GeneralShader	*m_pTextShader;
 
 	std::vector<Mesh *> m_meshes;
 	std::vector<Font *> m_fonts;

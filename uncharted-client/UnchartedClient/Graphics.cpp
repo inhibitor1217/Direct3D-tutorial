@@ -10,6 +10,7 @@ Graphics::Graphics()
 	m_pUIText			= nullptr;
 	m_pTextureShader	= nullptr;
 	m_pUIShader			= nullptr;
+	m_pTextShader		= nullptr;
 }
 
 
@@ -41,7 +42,7 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 
 	// Load Fonts.
 	char *fontNames[] = {
-		"Arial"
+		"Calibri"
 	};
 	for (auto fontName : fontNames) {
 		Font *font = new Font();
@@ -70,11 +71,9 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	}
 
 	// Load 3D Models.
-	m_pModel = new TextureModel();
+	m_pModel = new TextureModel(m_meshes[0], m_textures[0]);
 	if (!m_pModel)
 		return false;
-	m_pModel->SetMesh(m_meshes[0]);
-	reinterpret_cast<TextureModel *>(m_pModel)->SetTexture(m_textures[0]);
 	if (!m_pModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext())) {
 		MessageBox(hwnd, "Could not initialize the model object", "Error", MB_OK);
 		return false;
@@ -84,12 +83,15 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pUIText = new UIText();
 	if (!m_pUIText)
 		return false;
-	m_pUIText->SetFont(m_fonts[0]);
 	if (!m_pUIText->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(),
-		screenWidth, screenHeight, 512, 512)) {
+		screenWidth, screenHeight, 800, 600)) {
 		MessageBox(hwnd, "Could not initialize the UI object", "Error", MB_OK);
 		return false;
 	}
+	m_pUIText->SetFont(m_fonts[0]);
+	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
+	m_pUIText->SetMaxLineWidth(800);
+	m_pUIText->SetFontSize(4.0f);
 
 	// Load Shaders.
 	m_pTextureShader = new TextureShader();
@@ -120,6 +122,9 @@ void Graphics::Shutdown()
 	if (m_pUIShader)
 		m_pUIShader->Shutdown();
 
+	if (m_pTextShader)
+		m_pTextShader->Shutdown();
+
 	if (m_pModel)
 		m_pModel->Shutdown();
 
@@ -131,6 +136,7 @@ void Graphics::Shutdown()
 
 	Memory::SafeDelete(m_pTextureShader);
 	Memory::SafeDelete(m_pUIShader);
+	Memory::SafeDelete(m_pTextShader);
 	Memory::SafeDelete(m_pModel);
 	Memory::SafeDelete(m_pUIText);
 	Memory::SafeDelete(m_pCamera);
@@ -186,7 +192,7 @@ bool Graphics::Render()
 	m_pDirect3D->UseAlphaBlending(true);
 
 	// Render Text with enabled alpha blending.
-	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 64, 64))
+	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 0, 0))
 		return false;
 	if (!m_pUIShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), world, view, ortho, m_pUIText->GetTexture()))
 		return false;

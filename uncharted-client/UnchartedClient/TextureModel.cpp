@@ -8,13 +8,13 @@ TextureModel::TextureModel()
 }
 
 
-ID3D11ShaderResourceView *TextureModel::GetTexture()
+TextureModel::TextureModel(Mesh *mesh, Texture *texture) : RawModel(mesh)
 {
-	return m_pTexture->GetTexture();
+	m_pTexture = texture;
 }
 
 
-void TextureModel::SetTexture(Texture *texture)
+ID3D11ShaderResourceView *TextureModel::GetTexture()
 {
-	m_pTexture = texture;
+	return m_pTexture->GetTexture();
 }

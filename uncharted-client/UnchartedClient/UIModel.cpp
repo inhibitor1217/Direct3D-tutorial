@@ -121,8 +121,11 @@ bool UIModel::InitBuffers(ID3D11Device *pDevice)
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
-	if (FAILED(pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_pIndexBuffer)))
+	if (FAILED(pDevice->CreateBuffer(&indexBufferDesc, &indexData, &m_pIndexBuffer))) {
+		Memory::SafeDeleteArray(vertices);
+		Memory::SafeDeleteArray(indices);
 		return false;
+	}
 
 	Memory::SafeDeleteArray(vertices);
 	Memory::SafeDeleteArray(indices);
@@ -172,7 +175,7 @@ bool UIModel::UpdateBuffers(ID3D11DeviceContext *pDeviceContext, int posX, int p
 
 	pDeviceContext->Unmap(m_pVertexBuffer, 0);
 
-	Memory::SafeDelete(vertices);
+	Memory::SafeDeleteArray(vertices);
 
 	return true;
 }

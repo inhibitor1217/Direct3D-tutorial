@@ -10,6 +10,14 @@ RawModel::RawModel()
 }
 
 
+RawModel::RawModel(Mesh *mesh)
+{
+	m_pVertexBuffer = nullptr;
+	m_pIndexBuffer	= nullptr;
+	m_pMesh			= mesh;
+}
+
+
 RawModel::RawModel(const RawModel &other)
 {
 }
@@ -44,9 +52,9 @@ int RawModel::GetIndexCount()
 }
 
 
-void RawModel::SetMesh(Mesh *mesh)
+Mesh *RawModel::GetMesh()
 {
-	m_pMesh = mesh;
+	return m_pMesh;
 }
 
 

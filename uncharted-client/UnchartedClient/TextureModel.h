@@ -6,9 +6,9 @@ class TextureModel: public RawModel
 {
 public:
 	TextureModel();
+	TextureModel(Mesh *mesh, Texture *texture);
 
 	ID3D11ShaderResourceView *GetTexture();
-	void SetTexture(Texture *texture);
 
 private:
 	Texture	*m_pTexture;
