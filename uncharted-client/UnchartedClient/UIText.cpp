@@ -2,11 +2,19 @@
 
 
 
-UIText::UIText()
+void UIText::SetFont(Font *font)
 {
+	m_pFont = font;
 }
 
 
-UIText::~UIText()
+Font *UIText::GetFont()
 {
+	return m_pFont;
+}
+
+
+ID3D11ShaderResourceView *UIText::GetTexture()
+{
+	return m_pFont->GetTexture()->GetTexture();
 }

@@ -1,6 +1,11 @@
 #pragma once
 #include "stdafx.h"
+#include "Texture.h"
 #define MAX_ASCII 128
+
+const char FONT_PATH[] = "./Assets/Fonts/";
+const char FONT_PNG[] = ".png";
+const char FONT_FNT[] = ".fnt";
 
 struct Character {
 	int id;
@@ -22,11 +27,12 @@ public:
 	Font(const Font &other);
 	~Font();
 
-	bool Init(char *filename, int screenWidth, int screenHeight);
+	bool Init(char *filename, ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, int screenWidth, int screenHeight);
 	void Shutdown();
 
 	float GetSpaceWidth();
 	Character *GetCharacter(int key);
+	Texture *GetTexture();
 
 private:
 	struct FNTMetaData {
@@ -52,6 +58,8 @@ private:
 	float m_spaceWidth = 0.0f;
 
 	Character m_metaData[MAX_ASCII];
+
+	Texture *m_pTexture = nullptr;
 
 	bool LoadFNTFile(char *filename, int screenWidth, int screenHeight);
 };

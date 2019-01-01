@@ -36,6 +36,10 @@ bool Texture::Init(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext)
 		if (!LoadTarga(width, height))
 			return false;
 	}
+	else if (strstr(m_Filename, ".png") != NULL) {
+		if (!LoadPNG(width, height))
+			return false;
+	}
 	else
 		return false;
 
@@ -87,6 +91,27 @@ void Texture::Shutdown()
 ID3D11ShaderResourceView *Texture::GetTexture()
 {
 	return m_pTextureView;
+}
+
+
+bool Texture::LoadPNG(int &width, int &height)
+{
+	std::vector<unsigned char> image;
+	unsigned int tWidth, tHeight;
+
+	unsigned int error = lodepng::decode(image, tWidth, tHeight, reinterpret_cast<const char *>(m_Filename));
+
+	if (error)
+		return false;
+
+	width = static_cast<int>(tWidth);
+	height = static_cast<int>(tHeight);
+
+	m_pTextureData = new unsigned char[image.size()];
+	for (unsigned int i = 0; i < image.size(); i++)
+		m_pTextureData[i] = image[i];
+
+	return true;
 }
 
 

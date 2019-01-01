@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "lodepng.h"
 
 class Texture
 {
@@ -46,5 +47,6 @@ protected:
 
 	bool LoadTarga(int &width, int &height);
 	bool LoadBMPARGB32(int &width, int &height);
+	bool LoadPNG(int &width, int &height);
 };
 

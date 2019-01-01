@@ -18,15 +18,31 @@ Font::~Font()
 }
 
 
-bool Font::Init(char *filename, int screenWidth, int screenHeight)
+bool Font::Init(char *fontName, ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, int screenWidth, int screenHeight)
 {
-	return LoadFNTFile(filename, screenWidth, screenHeight);
+	char stringBuffer[256], fntFilename[256], pngFilename[256];
+
+	strncpy_s(stringBuffer, FONT_PATH, sizeof(stringBuffer));
+	strncat_s(stringBuffer, fontName, sizeof(stringBuffer));
+	strncpy_s(fntFilename, stringBuffer, sizeof(fntFilename));
+	strncpy_s(pngFilename, stringBuffer, sizeof(pngFilename));
+	strncat_s(fntFilename, FONT_FNT, sizeof(fntFilename));
+	strncat_s(pngFilename, FONT_PNG, sizeof(pngFilename));
+
+	if (!LoadFNTFile(fntFilename, screenWidth, screenHeight))
+		return false;
+
+	m_pTexture = new Texture(pngFilename);
+	return m_pTexture->Init(pDevice, pDeviceContext);
 }
 
 
 void Font::Shutdown()
 {
+	if (m_pTexture)
+		m_pTexture->Shutdown();
 
+	Memory::SafeDelete(m_pTexture);
 }
 
 
@@ -41,6 +57,12 @@ Character *Font::GetCharacter(int key)
 	if (key < 0 || key >= MAX_ASCII)
 		return NULL;
 	return &m_metaData[key];
+}
+
+
+Texture *Font::GetTexture()
+{
+	return m_pTexture;
 }
 
 

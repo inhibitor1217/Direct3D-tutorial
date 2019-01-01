@@ -7,7 +7,7 @@ Graphics::Graphics()
 	m_pDirect3D			= nullptr;
 	m_pCamera			= nullptr;
 	m_pModel			= nullptr;
-	m_pUIModel			= nullptr;
+	m_pUIText			= nullptr;
 	m_pTextureShader	= nullptr;
 	m_pUIShader			= nullptr;
 }
@@ -40,19 +40,18 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pCamera->SetPosition(0.0f, 3.0f, -10.0f);
 
 	// Load Fonts.
-	char *fontFiles[] = {
-		"./Assets/Fonts/arial.fnt"
+	char *fontNames[] = {
+		"Arial"
 	};
-	for (auto filename : fontFiles) {
+	for (auto fontName : fontNames) {
 		Font *font = new Font();
-		font->Init(filename, screenWidth, screenHeight);
+		font->Init(fontName, m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(), screenWidth, screenHeight);
 		m_fonts.push_back(font);
 	}
 
 	// Load Textures.
 	char *textureFiles[] = {
-		"./Assets/Textures/char.bmp",
-		"./Assets/Textures/grass-top.bmp"
+		"./Assets/Textures/char.bmp"
 	};
 	for (auto filename : textureFiles) {
 		Texture *texture = new Texture(filename);
@@ -82,12 +81,12 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	}
 
 	// Load UI Models.
-	m_pUIModel = new UIModel();
-	if (!m_pUIModel)
+	m_pUIText = new UIText();
+	if (!m_pUIText)
 		return false;
-	m_pUIModel->SetTexture(m_textures[1]);
-	if (!m_pUIModel->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(),
-		screenWidth, screenHeight, 128, 128)) {
+	m_pUIText->SetFont(m_fonts[0]);
+	if (!m_pUIText->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(),
+		screenWidth, screenHeight, 512, 512)) {
 		MessageBox(hwnd, "Could not initialize the UI object", "Error", MB_OK);
 		return false;
 	}
@@ -124,8 +123,8 @@ void Graphics::Shutdown()
 	if (m_pModel)
 		m_pModel->Shutdown();
 
-	if (m_pUIModel)
-		m_pUIModel->Shutdown();
+	if (m_pUIText)
+		m_pUIText->Shutdown();
 
 	if (m_pDirect3D)
 		m_pDirect3D->Shutdown();
@@ -133,7 +132,7 @@ void Graphics::Shutdown()
 	Memory::SafeDelete(m_pTextureShader);
 	Memory::SafeDelete(m_pUIShader);
 	Memory::SafeDelete(m_pModel);
-	Memory::SafeDelete(m_pUIModel);
+	Memory::SafeDelete(m_pUIText);
 	Memory::SafeDelete(m_pCamera);
 	Memory::SafeDelete(m_pDirect3D);
 
@@ -182,10 +181,17 @@ bool Graphics::Render()
 	m_pDirect3D->UseZBuffer(false);
 
 	// Render UIs with disabled depth buffer.
-	if (!m_pUIModel->Render(m_pDirect3D->GetDeviceContext(), 100, 100))
+
+
+	m_pDirect3D->UseAlphaBlending(true);
+
+	// Render Text with enabled alpha blending.
+	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 64, 64))
 		return false;
-	if (!m_pUIShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIModel->GetIndexCount(), world, view, ortho, m_pUIModel->GetTexture()))
+	if (!m_pUIShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), world, view, ortho, m_pUIText->GetTexture()))
 		return false;
+
+	m_pDirect3D->UseAlphaBlending(false);
 
 	m_pDirect3D->UseZBuffer(true);
 

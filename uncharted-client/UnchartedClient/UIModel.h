@@ -15,7 +15,7 @@ public:
 	bool Render(ID3D11DeviceContext *pDeviceContext, int posX, int posY);
 
 	int GetIndexCount();
-	ID3D11ShaderResourceView *GetTexture();
+	virtual ID3D11ShaderResourceView *GetTexture();
 	void SetTexture(Texture *texture);
 
 protected:

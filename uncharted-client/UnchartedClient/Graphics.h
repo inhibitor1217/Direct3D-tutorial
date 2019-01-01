@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Font.h"
 #include "TextureModel.h"
-#include "UIModel.h"
+#include "UIText.h"
 #include "UIShader.h"
 #include <vector>
 
@@ -28,7 +28,7 @@ private:
 	D3D				*m_pDirect3D;
 	Camera			*m_pCamera;
 	RawModel		*m_pModel;
-	UIModel			*m_pUIModel;
+	UIText			*m_pUIText;
 	GeneralShader	*m_pTextureShader;
 	GeneralShader	*m_pUIShader;
 
