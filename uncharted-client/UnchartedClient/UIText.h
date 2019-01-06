@@ -7,6 +7,12 @@
 class UIText: public UIModel
 {
 public:
+	enum ALIGN_MODE {
+		LEFT,
+		CENTER,
+		RIGHT
+	};
+
 	void SetFont(Font *font);
 	Font *GetFont();
 	ID3D11ShaderResourceView *GetTexture() override;
@@ -19,8 +25,8 @@ public:
 	void SetFontSize(float fontSize);
 	float GetMaxLineWidth();
 	void SetMaxLineWidth(int maxLineWidthInPixels);
-	bool GetCentering();
-	void SetCentering(bool centering);
+	int GetAlignMode();
+	void SetAlignMode(ALIGN_MODE mode);
 
 private:
 	struct Word {
@@ -41,7 +47,7 @@ private:
 	XMFLOAT4	m_color;
 	float		m_fontSize = 1.0f;
 	float		m_maxLineWidth = 1.0f;
-	bool		m_centering = false;
+	ALIGN_MODE	m_alignMode = LEFT;
 
 	bool InitBuffers(ID3D11Device *pDevice) override;
 	bool UpdateBuffers(ID3D11DeviceContext *pDeviceContext, int posX, int posY) override;

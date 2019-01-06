@@ -90,8 +90,9 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	}
 	m_pUIText->SetFont(m_fonts[0]);
 	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
-	m_pUIText->SetMaxLineWidth(800);
-	m_pUIText->SetFontSize(4.0f);
+	m_pUIText->SetMaxLineWidth(400);
+	m_pUIText->SetFontSize(2.0f);
+	m_pUIText->SetAlignMode(UIText::ALIGN_MODE::CENTER);
 
 	// Load Shaders.
 	m_pTextureShader = new TextureShader();
@@ -107,6 +108,14 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 		return false;
 	if (!m_pUIShader->Init(m_pDirect3D->GetDevice(), hwnd)) {
 		MessageBox(hwnd, "Could not initialize the UIShader object", "Error", MB_OK);
+		return false;
+	}
+
+	m_pTextShader = new TextShader();
+	if (!m_pTextShader)
+		return false;
+	if (!m_pTextShader->Init(m_pDirect3D->GetDevice(), hwnd)) {
+		MessageBox(hwnd, "Could not initialize the TextShader object", "Error", MB_OK);
 		return false;
 	}
 
@@ -194,8 +203,8 @@ bool Graphics::Render()
 	// Render Text with enabled alpha blending.
 	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 0, 0))
 		return false;
-	if (!m_pUIShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), world, view, ortho, m_pUIText->GetTexture()))
-		return false;
+	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), world, view, ortho, m_pUIText->GetTexture()))
+	 	return false;
 
 	m_pDirect3D->UseAlphaBlending(false);
 

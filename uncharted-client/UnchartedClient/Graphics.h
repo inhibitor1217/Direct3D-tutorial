@@ -5,7 +5,7 @@
 #include "Font.h"
 #include "TextureModel.h"
 #include "UIText.h"
-#include "UIShader.h"
+#include "TextShader.h"
 #include <vector>
 
 const bool FULL_SCREEN   = false;
@@ -27,8 +27,11 @@ public:
 private:
 	D3D				*m_pDirect3D;
 	Camera			*m_pCamera;
+	
 	RawModel		*m_pModel;
+	UIModel			*m_pUIModel;
 	UIText			*m_pUIText;
+
 	GeneralShader	*m_pTextureShader;
 	GeneralShader	*m_pUIShader;
 	GeneralShader	*m_pTextShader;

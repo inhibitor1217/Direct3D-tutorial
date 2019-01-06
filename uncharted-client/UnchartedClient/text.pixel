@@ -1,0 +1,18 @@
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+struct PixelInputType
+{
+	float4 position : SV_POSITION;
+	float2 tex : TEXCOORD0;
+};
+
+float4 TextPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4 textureColor;
+	textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+	textureColor.a = smoothstep(0.4f, 0.6f, textureColor.a);
+
+	return textureColor;
+}

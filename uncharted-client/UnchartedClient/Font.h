@@ -51,7 +51,7 @@ private:
 	const int			PAD_LEFT = 1;
 	const int			PAD_BOTTOM = 2;
 	const int			PAD_RIGHT = 3;
-	const int			DESIRED_PADDING = 5;
+	const int			DESIRED_PADDING = 8;
 	const float			LINE_HEIGHT = 0.03f;
 	const LPCSTR		SPLITTER = " ";
 	const LPCSTR		NUMBER_SEPARATOR = ",";

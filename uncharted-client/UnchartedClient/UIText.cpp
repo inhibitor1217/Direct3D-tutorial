@@ -71,15 +71,15 @@ void UIText::SetMaxLineWidth(int maxLineWidthInPixels)
 }
 
 
-bool UIText::GetCentering()
+int UIText::GetAlignMode()
 {
-	return m_centering;
+	return m_alignMode;
 }
 
 
-void UIText::SetCentering(bool centering)
+void UIText::SetAlignMode(UIText::ALIGN_MODE mode)
 {
-	m_centering = centering;
+	m_alignMode = mode;
 }
 
 
@@ -235,7 +235,7 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 		}
 	}
 
-	addWidth = currentWord->width + (currentWord->length > 0 ? m_pFont->GetSpaceWidth() : 0.0f);
+	addWidth = currentWord->width;
 	if ((currentLine->width + addWidth) * m_fontSize <= m_maxLineWidth) {
 		currentLine->words[currentLine->length++] = currentWord;
 		currentLine->width += addWidth;
@@ -259,8 +259,10 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 
 	for (int i = 0; i < numLines; i++) {
 		Line *line = lines[i];
-		if (m_centering)
-			cursorX = (m_maxLineWidth - line->width) * 0.5f;
+		if (m_alignMode == UIText::ALIGN_MODE::CENTER)
+			cursorX = (m_maxLineWidth - line->width * m_fontSize) * 0.5f;
+		else if (m_alignMode == UIText::ALIGN_MODE::RIGHT)
+			cursorX = m_maxLineWidth - line->width * m_fontSize;
 
 		for (int j = 0; j < line->length; j++) {
 			Word *word = line->words[j];
