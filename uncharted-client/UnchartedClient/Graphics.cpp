@@ -84,15 +84,13 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	if (!m_pUIText)
 		return false;
 	if (!m_pUIText->Init(m_pDirect3D->GetDevice(), m_pDirect3D->GetDeviceContext(),
-		screenWidth, screenHeight, 800, 600)) {
+		screenWidth, screenHeight, 1080, 720)) {
 		MessageBox(hwnd, "Could not initialize the UI object", "Error", MB_OK);
 		return false;
 	}
 	m_pUIText->SetFont(m_fonts[0]);
 	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
-	m_pUIText->SetMaxLineWidth(400);
-	m_pUIText->SetFontSize(2.0f);
-	m_pUIText->SetAlignMode(UIText::ALIGN_MODE::CENTER);
+	m_pUIText->SetFontSize(1.5f);
 
 	// Load Shaders.
 	m_pTextureShader = new TextureShader();
@@ -186,10 +184,20 @@ bool Graphics::Render()
 	m_pCamera->GetViewMatrix(view);
 	m_pDirect3D->GetProjectionMatrix(projection);
 	m_pDirect3D->GetOrthoMatrix(ortho);
-	
+
+	world = XMMatrixTranspose(world);
+	view = XMMatrixTranspose(view);
+	projection = XMMatrixTranspose(projection);
+	ortho = XMMatrixTranspose(ortho);
+
+	// Generate shader uniform variable wrappers.
+	void *pTextureShaderVariables = GeneralShader::CreateUniformVariable(world, view, projection);
+	void *pTextShaderVariables = GeneralShader::CreateUniformVariable(world, view, ortho);
+
 	// Render Scene.
 	m_pModel->Render(m_pDirect3D->GetDeviceContext());
-	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), world, view, projection, 
+
+	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), pTextureShaderVariables, 
 		reinterpret_cast<TextureModel *>(m_pModel)->GetTexture()))
 		return false;
 
@@ -197,13 +205,13 @@ bool Graphics::Render()
 
 	// Render UIs with disabled depth buffer.
 
-
 	m_pDirect3D->UseAlphaBlending(true);
 
 	// Render Text with enabled alpha blending.
+
 	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 0, 0))
 		return false;
-	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), world, view, ortho, m_pUIText->GetTexture()))
+	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), pTextShaderVariables, m_pUIText->GetTexture()))
 	 	return false;
 
 	m_pDirect3D->UseAlphaBlending(false);
@@ -211,6 +219,10 @@ bool Graphics::Render()
 	m_pDirect3D->UseZBuffer(true);
 
 	m_pDirect3D->EndScene();
+
+	// Clean up shader uniform variables.
+	Memory::SafeDelete(pTextureShaderVariables);
+	Memory::SafeDelete(pTextShaderVariables);
 
 	return true;
 }

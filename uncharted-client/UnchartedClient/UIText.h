@@ -23,8 +23,6 @@ public:
 	void SetColor(float r, float g, float b, float a);
 	float GetFontSize();
 	void SetFontSize(float fontSize);
-	float GetMaxLineWidth();
-	void SetMaxLineWidth(int maxLineWidthInPixels);
 	int GetAlignMode();
 	void SetAlignMode(ALIGN_MODE mode);
 

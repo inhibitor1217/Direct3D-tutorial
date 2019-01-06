@@ -13,18 +13,6 @@ TextureShader::TextureShader()
 }
 
 
-bool TextureShader::Render(ID3D11DeviceContext *pDeviceContext, int indexCount,
-	XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture)
-{
-	if (!SetShaderParams(pDeviceContext, world, view, projection, texture))
-		return false;
-
-	RenderShader(pDeviceContext, indexCount);
-
-	return true;
-}
-
-
 bool TextureShader::InitShader(ID3D11Device *pDevice, HWND hwnd)
 {
 	if (!GeneralShader::InitShader(pDevice, hwnd))
@@ -96,32 +84,6 @@ void TextureShader::ShutdownShader()
 	GeneralShader::ShutdownShader();
 
 	Memory::SafeRelease(m_pSampleState);
-}
-
-
-bool TextureShader::SetShaderParams(ID3D11DeviceContext *pDeviceContext, XMMATRIX world, XMMATRIX view, XMMATRIX projection, ID3D11ShaderResourceView *texture)
-{
-	world = XMMatrixTranspose(world);
-	view = XMMatrixTranspose(view);
-	projection = XMMatrixTranspose(projection);
-
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	if (FAILED(pDeviceContext->Map(m_pMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
-		return false;
-
-	MatrixBufferType *dataPtr = reinterpret_cast<MatrixBufferType *>(mappedResource.pData);
-
-	dataPtr->world = world;
-	dataPtr->view = view;
-	dataPtr->projection = projection;
-
-	pDeviceContext->Unmap(m_pMatrixBuffer, 0);
-
-	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pMatrixBuffer);
-
-	pDeviceContext->PSSetShaderResources(0, 1, &texture);
-
-	return true;
 }
 
 

@@ -7,7 +7,7 @@ GeneralShader::GeneralShader()
 	m_pVertexShader = nullptr;
 	m_pPixelShader = nullptr;
 	m_pLayout = nullptr;
-	m_pMatrixBuffer = nullptr;
+	m_pUniformVariableBuffer = nullptr;
 	m_pPolygonLayout = nullptr;
 
 	m_vsFilename = "";
@@ -36,6 +36,18 @@ bool GeneralShader::Init(ID3D11Device *pDevice, HWND hwnd)
 void GeneralShader::Shutdown()
 {
 	ShutdownShader();
+}
+
+
+bool GeneralShader::Render(ID3D11DeviceContext *pDeviceContext, int indexCount,
+	void *pUniformVariables, ID3D11ShaderResourceView *texture)
+{
+	if (!SetShaderParams(pDeviceContext, pUniformVariables, texture))
+		return false;
+
+	RenderShader(pDeviceContext, indexCount);
+
+	return true;
 }
 
 
@@ -80,15 +92,15 @@ bool GeneralShader::InitShader(ID3D11Device *pDevice, HWND hwnd)
 	Memory::SafeRelease(pixelShaderBuffer);
 	Memory::SafeDeleteArray(m_pPolygonLayout);
 
-	D3D11_BUFFER_DESC matrixBufferDesc;
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBufferDesc.MiscFlags = 0;
-	matrixBufferDesc.StructureByteStride = 0;
+	D3D11_BUFFER_DESC uniformVariableBufferDesc;
+	uniformVariableBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	uniformVariableBufferDesc.ByteWidth = GetUniformVariableSize();
+	uniformVariableBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	uniformVariableBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	uniformVariableBufferDesc.MiscFlags = 0;
+	uniformVariableBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pDevice->CreateBuffer(&matrixBufferDesc, NULL, &m_pMatrixBuffer)))
+	if (FAILED(pDevice->CreateBuffer(&uniformVariableBufferDesc, NULL, &m_pUniformVariableBuffer)))
 		return false;
 
 	return true;
@@ -96,19 +108,18 @@ bool GeneralShader::InitShader(ID3D11Device *pDevice, HWND hwnd)
 
 void GeneralShader::ShutdownShader()
 {
-	Memory::SafeRelease(m_pMatrixBuffer);
+	Memory::SafeRelease(m_pUniformVariableBuffer);
 	Memory::SafeRelease(m_pLayout);
 	Memory::SafeRelease(m_pPixelShader);
 	Memory::SafeRelease(m_pVertexShader);
+	Memory::SafeDeleteArray(m_pPolygonLayout);
 }
 
 
 void GeneralShader::OutputShaderErrorMsg(ID3D10Blob *errorMsg, HWND hwnd, LPCSTR shaderFilename)
 {
 	OutputDebugString(reinterpret_cast<const char *>(errorMsg->GetBufferPointer()));
-
 	MessageBox(hwnd, "Error compiling shader.", shaderFilename, MB_OK);
-
 	Memory::SafeRelease(errorMsg);
 }
 
@@ -121,4 +132,40 @@ void GeneralShader::RenderShader(ID3D11DeviceContext *pDeviceContext, int indexC
 	pDeviceContext->PSSetShader(m_pPixelShader, NULL, 0);
 
 	pDeviceContext->DrawIndexed(indexCount, 0, 0);
+}
+
+
+size_t GeneralShader::GetUniformVariableSize()
+{
+	return sizeof(UniformVariableType);
+}
+
+
+void *GeneralShader::CreateUniformVariable(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
+{
+	UniformVariableType *ptr = reinterpret_cast<UniformVariableType *>(malloc(sizeof(UniformVariableType)));
+
+	ptr->world = world;
+	ptr->view = view;
+	ptr->projection = projection;
+
+	return reinterpret_cast<void *>(ptr);
+}
+
+
+bool GeneralShader::SetShaderParams(ID3D11DeviceContext *pDeviceContext, void *pUniformVariables, ID3D11ShaderResourceView *texture)
+{
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	if (FAILED(pDeviceContext->Map(m_pUniformVariableBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+		return false;
+
+	memcpy_s(mappedResource.pData, GetUniformVariableSize(), pUniformVariables, GetUniformVariableSize());
+
+	pDeviceContext->Unmap(m_pUniformVariableBuffer, 0);
+
+	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pUniformVariableBuffer);
+
+	pDeviceContext->PSSetShaderResources(0, 1, &texture);
+
+	return true;
 }

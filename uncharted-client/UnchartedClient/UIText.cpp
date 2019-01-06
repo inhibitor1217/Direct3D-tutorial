@@ -59,18 +59,6 @@ void UIText::SetFontSize(float fontSize)
 }
 
 
-float UIText::GetMaxLineWidth()
-{
-	return m_maxLineWidth;
-}
-
-
-void UIText::SetMaxLineWidth(int maxLineWidthInPixels)
-{
-	m_maxLineWidth = static_cast<float>(maxLineWidthInPixels) / static_cast<float>(m_screenWidth);
-}
-
-
 int UIText::GetAlignMode()
 {
 	return m_alignMode;
@@ -184,6 +172,7 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 	Line *currentLine = reinterpret_cast<Line *>(malloc(sizeof(Line)));
 	Word *currentWord = reinterpret_cast<Word *>(malloc(sizeof(Word)));
 	float addWidth = 0.0f;
+	float maxLineWidth = static_cast<float>(m_width) / static_cast<float>(m_screenWidth);
 
 	ZeroMemory(currentLine, sizeof(Line));
 	ZeroMemory(currentWord, sizeof(Word));
@@ -193,7 +182,7 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 		switch (characterKey) {
 		case ' ':
 			addWidth = currentWord->width + (currentWord->length > 0 ? m_pFont->GetSpaceWidth() : 0.0f);
-			if ((currentLine->width + addWidth) * m_fontSize <= m_maxLineWidth) {
+			if ((currentLine->width + addWidth) * m_fontSize <= maxLineWidth) {
 				currentLine->words[currentLine->length++] = currentWord;
 				currentLine->width += addWidth;
 				numChars++;
@@ -210,7 +199,7 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 			break;
 		case '\n':
 			addWidth = currentWord->width + (currentWord->length > 0 ? m_pFont->GetSpaceWidth() : 0.0f);
-			if ((currentLine->width + addWidth) * m_fontSize <= m_maxLineWidth) {
+			if ((currentLine->width + addWidth) * m_fontSize <= maxLineWidth) {
 				currentLine->words[currentLine->length++] = currentWord;
 				currentLine->width += addWidth;
 			}
@@ -236,7 +225,7 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 	}
 
 	addWidth = currentWord->width;
-	if ((currentLine->width + addWidth) * m_fontSize <= m_maxLineWidth) {
+	if ((currentLine->width + addWidth) * m_fontSize <= maxLineWidth) {
 		currentLine->words[currentLine->length++] = currentWord;
 		currentLine->width += addWidth;
 	}
@@ -260,9 +249,9 @@ void UIText::GenerateTextMesh(int posX, int posY, VertexType *&vertices)
 	for (int i = 0; i < numLines; i++) {
 		Line *line = lines[i];
 		if (m_alignMode == UIText::ALIGN_MODE::CENTER)
-			cursorX = (m_maxLineWidth - line->width * m_fontSize) * 0.5f;
+			cursorX = (maxLineWidth - line->width * m_fontSize) * 0.5f;
 		else if (m_alignMode == UIText::ALIGN_MODE::RIGHT)
-			cursorX = m_maxLineWidth - line->width * m_fontSize;
+			cursorX = maxLineWidth - line->width * m_fontSize;
 
 		for (int j = 0; j < line->length; j++) {
 			Word *word = line->words[j];

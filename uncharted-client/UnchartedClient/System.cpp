@@ -142,8 +142,8 @@ bool System::InitWindows(int &screenWidth, int &screenHeight)
 			return false;
 	}
 	else {
-		screenWidth  = 800;
-		screenHeight = 600;
+		screenWidth  = 1080;
+		screenHeight = 720;
 	}
 
 	m_hwnd = CreateWindow("DXWNDCLASS", m_applicationName, WS_OVERLAPPEDWINDOW,
