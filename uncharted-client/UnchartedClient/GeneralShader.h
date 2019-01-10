@@ -17,7 +17,8 @@ public:
 	virtual size_t GetVSUniformVariableSize();
 	virtual size_t GetPSUniformVariableSize();
 	
-	static void *CreateVSUniformVariable(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
+	static bool CreateVSUniformVariable(void *&ptr);
+	static void SetVSUniformVariable(void *ptr, XMMATRIX world, XMMATRIX view, XMMATRIX projection);
 
 protected:
 	struct VSUniformVariableType {

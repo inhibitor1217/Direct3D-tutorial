@@ -8,7 +8,9 @@ public:
 	TextShader();
 
 	size_t GetPSUniformVariableSize() override;
-	static void *CreatePSUniformVariable(XMFLOAT4 color);
+
+	static bool CreatePSUniformVariable(void *&ptr);
+	static void SetPSUniformVariable(void *ptr, XMFLOAT4 color);
 
 private:
 	struct PSUniformVariableType {

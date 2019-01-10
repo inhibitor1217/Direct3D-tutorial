@@ -165,15 +165,21 @@ size_t GeneralShader::GetPSUniformVariableSize()
 }
 
 
-void *GeneralShader::CreateVSUniformVariable(XMMATRIX world, XMMATRIX view, XMMATRIX projection)
+bool GeneralShader::CreateVSUniformVariable(void *&ptr)
 {
-	VSUniformVariableType *ptr = reinterpret_cast<VSUniformVariableType *>(malloc(sizeof(VSUniformVariableType)));
+	ptr = malloc(sizeof(VSUniformVariableType));
+	if (!ptr)
+		return false;
+	return true;
+}
 
-	ptr->world = world;
-	ptr->view = view;
-	ptr->projection = projection;
 
-	return reinterpret_cast<void *>(ptr);
+void GeneralShader::SetVSUniformVariable(void *ptr, XMMATRIX world, XMMATRIX view, XMMATRIX projection)
+{
+	VSUniformVariableType *_ptr = reinterpret_cast<VSUniformVariableType *>(ptr);
+	_ptr->world = world;
+	_ptr->view = view;
+	_ptr->projection = projection;
 }
 
 

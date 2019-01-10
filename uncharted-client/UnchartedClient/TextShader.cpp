@@ -16,13 +16,19 @@ size_t TextShader::GetPSUniformVariableSize()
 
 
 
-void *TextShader::CreatePSUniformVariable(XMFLOAT4 color)
+bool TextShader::CreatePSUniformVariable(void *&ptr)
 {
-	PSUniformVariableType *ptr = reinterpret_cast<PSUniformVariableType *>(malloc(sizeof(PSUniformVariableType)));
+	ptr = malloc(sizeof(PSUniformVariableType));
+	if (!ptr)
+		return false;
+	return true;
+}
 
-	ptr->color = color;
 
-	return reinterpret_cast<void *>(ptr);
+void TextShader::SetPSUniformVariable(void *ptr, XMFLOAT4 color)
+{
+	PSUniformVariableType *_ptr = reinterpret_cast<PSUniformVariableType *>(ptr);
+	_ptr->color = color;
 }
 
 

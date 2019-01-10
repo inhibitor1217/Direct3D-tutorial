@@ -25,16 +25,20 @@ public:
 	bool Frame();
 
 private:
-	D3D				*m_pDirect3D;
-	Camera			*m_pCamera;
+	D3D				*m_pDirect3D = nullptr;
+	Camera			*m_pCamera = nullptr;
 	
-	RawModel		*m_pModel;
-	UIModel			*m_pUIModel;
-	UIText			*m_pUIText;
+	RawModel		*m_pModel = nullptr;
+	UIModel			*m_pUIModel = nullptr;
+	UIText			*m_pUIText = nullptr;
 
-	GeneralShader	*m_pTextureShader;
-	GeneralShader	*m_pUIShader;
-	GeneralShader	*m_pTextShader;
+	GeneralShader	*m_pTextureShader = nullptr;
+	GeneralShader	*m_pUIShader = nullptr;
+	GeneralShader	*m_pTextShader = nullptr;
+
+	void			*m_pTextureVSShaderVariables = nullptr;
+	void			*m_pTextVSShaderVariables = nullptr;
+	void			*m_pTextPSShaderVariables = nullptr;
 
 	std::vector<Mesh *> m_meshes;
 	std::vector<Font *> m_fonts;
