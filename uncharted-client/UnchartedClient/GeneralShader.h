@@ -11,14 +11,16 @@ public:
 	virtual bool Init(ID3D11Device *pDevice, HWND hwnd);
 	virtual void Shutdown();
 	bool Render(ID3D11DeviceContext *pDeviceContext, int indexCount,
-		void *pUniformVariables, ID3D11ShaderResourceView *texture);
+		void *pVSUniformVariables, void *pPSUniformVariables,
+		ID3D11ShaderResourceView *texture);
 
-	virtual size_t GetUniformVariableSize();
+	virtual size_t GetVSUniformVariableSize();
+	virtual size_t GetPSUniformVariableSize();
 	
-	static void *CreateUniformVariable(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
+	static void *CreateVSUniformVariable(XMMATRIX world, XMMATRIX view, XMMATRIX projection);
 
 protected:
-	struct UniformVariableType {
+	struct VSUniformVariableType {
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
@@ -27,7 +29,8 @@ protected:
 	ID3D11VertexShader			*m_pVertexShader;
 	ID3D11PixelShader			*m_pPixelShader;
 	ID3D11InputLayout			*m_pLayout;
-	ID3D11Buffer				*m_pUniformVariableBuffer;
+	ID3D11Buffer				*m_pVSUniformVariableBuffer;
+	ID3D11Buffer				*m_pPSUniformVariableBuffer;
 	D3D11_INPUT_ELEMENT_DESC	*m_pPolygonLayout;
 
 	LPCSTR m_vsFilename;
@@ -41,6 +44,8 @@ protected:
 	virtual void OutputShaderErrorMsg(ID3D10Blob *errorMsg, HWND hwnd, LPCSTR shaderFilename);
 	virtual void RenderShader(ID3D11DeviceContext *pDeviceContext, int indexCount);
 
-	bool SetShaderParams(ID3D11DeviceContext *pDeviceContext, void *pUniformVariables, ID3D11ShaderResourceView *texture);
+	bool SetShaderParams(ID3D11DeviceContext *pDeviceContext,
+		void *pVSUniformVariables, void *pPSUniformVariables,
+		ID3D11ShaderResourceView *texture);
 };
 

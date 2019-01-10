@@ -9,6 +9,23 @@ TextShader::TextShader()
 }
 
 
+size_t TextShader::GetPSUniformVariableSize()
+{
+	return sizeof(PSUniformVariableType);
+}
+
+
+
+void *TextShader::CreatePSUniformVariable(XMFLOAT4 color)
+{
+	PSUniformVariableType *ptr = reinterpret_cast<PSUniformVariableType *>(malloc(sizeof(PSUniformVariableType)));
+
+	ptr->color = color;
+
+	return reinterpret_cast<void *>(ptr);
+}
+
+
 bool TextShader::LoadTextureSampler(ID3D11Device *pDevice) {
 
 	D3D11_SAMPLER_DESC samplerDesc;

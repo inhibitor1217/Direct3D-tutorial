@@ -91,6 +91,7 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	m_pUIText->SetFont(m_fonts[0]);
 	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
 	m_pUIText->SetFontSize(1.5f);
+	m_pUIText->SetColor(1.0f, 0.0f, 1.0f, 1.0f);
 
 	// Load Shaders.
 	m_pTextureShader = new TextureShader();
@@ -191,13 +192,13 @@ bool Graphics::Render()
 	ortho = XMMatrixTranspose(ortho);
 
 	// Generate shader uniform variable wrappers.
-	void *pTextureShaderVariables = GeneralShader::CreateUniformVariable(world, view, projection);
-	void *pTextShaderVariables = GeneralShader::CreateUniformVariable(world, view, ortho);
+	void *pTextureVSShaderVariables = GeneralShader::CreateVSUniformVariable(world, view, projection);
+	void *pTextVSShaderVariables = GeneralShader::CreateVSUniformVariable(world, view, ortho);
 
 	// Render Scene.
 	m_pModel->Render(m_pDirect3D->GetDeviceContext());
 
-	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), pTextureShaderVariables, 
+	if (!m_pTextureShader->Render(m_pDirect3D->GetDeviceContext(), m_pModel->GetIndexCount(), pTextureVSShaderVariables, NULL,
 		reinterpret_cast<TextureModel *>(m_pModel)->GetTexture()))
 		return false;
 
@@ -209,9 +210,10 @@ bool Graphics::Render()
 
 	// Render Text with enabled alpha blending.
 
+	void *pTextPSShaderVariables = TextShader::CreatePSUniformVariable(m_pUIText->GetColor());
 	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 0, 0))
 		return false;
-	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), pTextShaderVariables, m_pUIText->GetTexture()))
+	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), pTextVSShaderVariables, pTextPSShaderVariables, m_pUIText->GetTexture()))
 	 	return false;
 
 	m_pDirect3D->UseAlphaBlending(false);
@@ -221,8 +223,8 @@ bool Graphics::Render()
 	m_pDirect3D->EndScene();
 
 	// Clean up shader uniform variables.
-	Memory::SafeDelete(pTextureShaderVariables);
-	Memory::SafeDelete(pTextShaderVariables);
+	Memory::SafeDelete(pTextureVSShaderVariables);
+	Memory::SafeDelete(pTextVSShaderVariables);
 
 	return true;
 }

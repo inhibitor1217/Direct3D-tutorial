@@ -1,4 +1,4 @@
-cbuffer MatrixBuffer
+cbuffer UniformVariables
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
