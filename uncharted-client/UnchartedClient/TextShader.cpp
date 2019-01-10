@@ -25,10 +25,11 @@ bool TextShader::CreatePSUniformVariable(void *&ptr)
 }
 
 
-void TextShader::SetPSUniformVariable(void *ptr, XMFLOAT4 color)
+void TextShader::SetPSUniformVariable(void *ptr, XMFLOAT4 color, float size)
 {
 	PSUniformVariableType *_ptr = reinterpret_cast<PSUniformVariableType *>(ptr);
 	_ptr->color = color;
+	_ptr->offset = 0.12f / (size + 0.01f);
 }
 
 

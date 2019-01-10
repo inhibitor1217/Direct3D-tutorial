@@ -35,6 +35,7 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 
 	// Load Fonts.
 	char *fontNames[] = {
+		"Arial",
 		"Calibri"
 	};
 	for (auto fontName : fontNames) {
@@ -83,8 +84,8 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 	}
 	m_pUIText->SetFont(m_fonts[0]);
 	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
-	m_pUIText->SetFontSize(4.0f);
-	m_pUIText->SetColor(0.0f, 1.0f, 1.0f, 0.3f);
+	m_pUIText->SetFontSize(2.0f);
+	m_pUIText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Load Shaders.
 	m_pTextureShader = new TextureShader();
@@ -215,7 +216,7 @@ bool Graphics::Render()
 
 	// Render Text with enabled alpha blending.
 
-	TextShader::SetPSUniformVariable(m_pTextPSShaderVariables, m_pUIText->GetColor());
+	TextShader::SetPSUniformVariable(m_pTextPSShaderVariables, m_pUIText->GetColor(), m_pUIText->GetFontSize());
 	if (!m_pUIText->Render(m_pDirect3D->GetDeviceContext(), 0, 0))
 		return false;
 	if (!m_pTextShader->Render(m_pDirect3D->GetDeviceContext(), m_pUIText->GetIndexCount(), m_pTextVSShaderVariables, m_pTextPSShaderVariables, m_pUIText->GetTexture()))

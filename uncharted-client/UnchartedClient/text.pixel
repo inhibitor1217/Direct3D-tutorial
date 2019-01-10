@@ -4,6 +4,7 @@ SamplerState SampleType;
 cbuffer UniformVariables
 {
 	float4 color;
+	float offset;
 };
 
 struct PixelInputType
@@ -18,7 +19,7 @@ float4 TextPixelShader(PixelInputType input) : SV_TARGET
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 
 	textureColor.rgb = color.rgb;
-	textureColor.a = color.a * smoothstep(0.4f, 0.6f, textureColor.a);
+	textureColor.a = color.a * smoothstep(0.5f - offset, 0.5f + offset, textureColor.a);
 
 	return textureColor;
 }

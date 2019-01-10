@@ -10,11 +10,12 @@ public:
 	size_t GetPSUniformVariableSize() override;
 
 	static bool CreatePSUniformVariable(void *&ptr);
-	static void SetPSUniformVariable(void *ptr, XMFLOAT4 color);
+	static void SetPSUniformVariable(void *ptr, XMFLOAT4 color, float size);
 
 private:
 	struct PSUniformVariableType {
 		XMFLOAT4 color;
+		float offset;
 	};
 
 	bool LoadTextureSampler(ID3D11Device *pDevice) override;
