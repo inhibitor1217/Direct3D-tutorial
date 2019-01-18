@@ -6,9 +6,10 @@
 #include "TextureModel.h"
 #include "UIText.h"
 #include "TextShader.h"
+#include "Input.h"
 #include <vector>
 
-const bool FULL_SCREEN   = false;
+const bool FULL_SCREEN   = true;
 const bool VSYNC_ENABLED = false;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR  = 0.1f;
@@ -22,7 +23,7 @@ public:
 
 	bool Init(INT screenWidth, INT screenHeight, HWND hwnd);
 	void Shutdown();
-	bool Frame();
+	bool Frame(Input *pInput);
 
 private:
 	D3D				*m_pDirect3D = nullptr;

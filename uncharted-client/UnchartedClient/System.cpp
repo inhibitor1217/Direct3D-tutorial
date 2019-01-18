@@ -35,7 +35,7 @@ bool System::Init()
 	m_pInput = new Input();
 	if (!m_pInput)
 		return false;
-	m_pInput->Init();
+	m_pInput->Init(m_hInstance, m_hwnd, screenWidth, screenHeight);
 
 	m_pGraphics = new Graphics();
 	if (!m_pGraphics)
@@ -52,6 +52,7 @@ void System::Shutdown()
 	}
 
 	if (m_pInput) {
+		m_pInput->Shutdown();
 		Memory::SafeDelete(m_pInput);
 	}
 
@@ -81,28 +82,19 @@ int System::Run()
 
 bool System::Frame()
 {
+	if (!m_pInput->Frame())
+		return false;
+
 	if (m_pInput->IsKeyDown(VK_ESCAPE))
 		return false;
 
-	return m_pGraphics->Frame();
+	return m_pGraphics->Frame(m_pInput);
 }
 
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg)
-	{
-	case WM_KEYDOWN:
-		m_pInput->KeyDown(static_cast<UINT>(wParam));
-		return 0;
-		
-	case WM_KEYUP:
-		m_pInput->KeyUp(static_cast<UINT>(wParam));
-		return 0;
-
-	default:
-		return DefWindowProc(hwnd, msg, wParam, lParam);
-	}
+	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 

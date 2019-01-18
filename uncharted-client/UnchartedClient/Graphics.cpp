@@ -35,7 +35,6 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 
 	// Load Fonts.
 	char *fontNames[] = {
-		"Arial",
 		"Calibri"
 	};
 	for (auto fontName : fontNames) {
@@ -83,8 +82,8 @@ bool Graphics::Init(INT screenWidth, INT screenHeight, HWND hwnd)
 		return false;
 	}
 	m_pUIText->SetFont(m_fonts[0]);
-	m_pUIText->SetText("Hello, world!\n\nIn C++ there is a concept of constructor's intialization list, which is where you can and should call the base class' constructor.");
-	m_pUIText->SetFontSize(2.0f);
+	m_pUIText->SetText("Mouse X: \nMouse Y: ");
+	m_pUIText->SetFontSize(1.0f);
 	m_pUIText->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Load Shaders.
@@ -172,8 +171,15 @@ void Graphics::Shutdown()
 }
 
 
-bool Graphics::Frame()
+bool Graphics::Frame(Input *pInput)
 {
+	char str[128];
+	int mouseX = 0, mouseY = 0;
+
+	pInput->GetMouse(mouseX, mouseY);
+	sprintf_s(str, "Mouse X: %d\nMouse Y: %d", mouseX, mouseY);
+	m_pUIText->SetText(str);
+
 	return Render();
 }
 
